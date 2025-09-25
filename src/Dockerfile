@@ -1,31 +1,38 @@
-# Stage 1: Build the React app
-FROM node:18-alpine AS build
+# --- Stage 1: Build ---
+# Use a Node.js image to build the Vite/React application.
+# Using alpine for a smaller image size.
+FROM node:20-alpine AS builder
+
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json package-lock.json* ./
+# Copy package.json and package-lock.json to leverage Docker's layer caching.
+# This step will only be re-run if these files change.
+COPY package.json package-lock.json ./
+
+# Install project dependencies
 RUN npm install
 
-# Copy the rest of the source code and build
+# Copy the rest of the application source code into the container
 COPY . .
+
+# Run the build script defined in package.json
 RUN npm run build
 
-# Stage 2: Serve the app with Nginx
-FROM nginx:1.25-alpine AS final
-WORKDIR /usr/share/nginx/html
+# --- Stage 2: Serve ---
+# Use a lightweight Nginx image to serve the static files.
+FROM nginx:stable-alpine
 
-# Remove default Nginx content
-RUN rm -rf ./*
+# Copy the custom Nginx configuration file provided.
+# This config is set up to listen on port 8080, as required by Cloud Run,
+# and correctly handle routing for a Single Page Application (SPA).
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy custom Nginx configuration from the build stage
-COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the built static assets from the 'builder' stage to the Nginx public directory.
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy built assets from the 'build' stage
-COPY --from=build /app/dist .
-
-# Change ownership of the web root to the nginx user to avoid permission issues
-RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html
-
-# Expose port 8080 (as required by Cloud Run)
+# Expose port 8080 to the outside world.
 EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+
+# The default command for the nginx image is to start the server.
+# CMD ["nginx", "-g", "daemon off;"]
