@@ -90,6 +90,17 @@ This setup is containerized with Docker, making it perfect for Google Cloud Run.
 * A Google Cloud Project with the Cloud Run and Artifact Registry APIs enabled.
 * A Google Cloud Artifact Registry with a repository named ```cloud-run-source-deploy``` created.
 
+To avoid 403 (Forbidden) errors when running the application from Cloud Run, you must restrict your API key to allow requests from a specific FQDN/Domain associated with it.
+
+* On the Credentials page, click the pencil icon to edit your new API key.
+* Under Application restrictions, select "Websites".
+* Click "ADD" and add your domain/FQDN.
+
+```
+  http://localhost:5173 (for local)
+  https://{your-domain/fqdn}/ (for deployed in the cloud) 
+  ```
+
 ### Deployment Steps
 
 **Build the Docker Image:**
