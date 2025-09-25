@@ -1,0 +1,9 @@
+/* Import Tailwind's base styles, components, and utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apply the default font */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
