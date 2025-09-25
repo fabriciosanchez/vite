@@ -17,11 +17,11 @@ WORKDIR /usr/share/nginx/html
 # Remove default Nginx content
 RUN rm -rf ./*
 
+# Copy custom Nginx configuration from the build stage
+COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
+
 # Copy built assets from the 'build' stage
 COPY --from=build /app/dist .
-
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 8080 (as required by Cloud Run)
 EXPOSE 8080

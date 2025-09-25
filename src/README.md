@@ -5,12 +5,12 @@ This project is a React-based web application that allows candidates to practice
 Project Structure
 
 ```/
-├── Dockerfile
-├── index.html
-├── nginx.conf
-├── package.json
-├── README.md
-├── vite.config.js
+├── Dockerfile         # Docker configuration for containerization
+├── nginx.conf         # Nginx configuration for serving the app
+├── package.json       # Project dependencies and scripts
+├── README.md          # This file
+├── vite.config.js     # Vite configuration
+├── index.html         # Main HTML entry point
 └── src/
     ├── App.jsx
     ├── index.css
@@ -88,6 +88,7 @@ This setup is containerized with Docker, making it perfect for Google Cloud Run.
 * Google Cloud SDK (gcloud CLI) installed and configured.
 * Docker installed and running.
 * A Google Cloud Project with the Cloud Run and Artifact Registry APIs enabled.
+* A Google Cloud Artifact Registry with a repository named ```cloud-run-source-deploy``` created.
 
 ### Deployment Steps
 
