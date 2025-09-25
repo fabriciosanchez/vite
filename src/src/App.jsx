@@ -265,7 +265,7 @@ function ConfigPage() {
     <div className="flex items-center justify-center min-h-screen p-4 bg-white">
       <div className="w-full max-w-2xl p-8 space-y-8 bg-white rounded-2xl shadow-2xl border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-gray-900">
-          Virtual Interview Setup
+          VITE Setup
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Position Input */}
@@ -286,7 +286,7 @@ function ConfigPage() {
           {/* Question Types Checkboxes */}
           <div>
             <label className="block text-sm font-medium text-gray-600">
-              Question Types
+              What type of questions would you like to be asked?
             </label>
             <div className="grid grid-cols-2 gap-4 mt-2">
               {allQuestionTypes.map(type => (
