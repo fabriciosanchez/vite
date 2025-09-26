@@ -25,10 +25,10 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package*.json ./
 
 # Copy the application code from the build stage.
-COPY --from=build /usr/src/app/src ./src
+COPY --from=build /usr/src/app/server.js ./
 
 # Cloud Run will automatically use the PORT environment variable.
 EXPOSE 8080
 
 # Define the command to run your app.
-CMD [ "node", "src/api/server.js" ]
+CMD [ "node", "server.js" ]
