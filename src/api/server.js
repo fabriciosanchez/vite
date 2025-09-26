@@ -10,7 +10,7 @@ app.use(cors()); // Enable CORS for your frontend to connect
 
 // Configure your PostgreSQL connection details
 const pool = new Pool({
-  user: process.DB_USER,
+  user: process.env.DB_USER,
   host: process.env.DB_HOST, // or private IP for VPC
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
