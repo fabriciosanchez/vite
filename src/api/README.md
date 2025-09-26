@@ -51,6 +51,36 @@ DB_PASSWORD=your_database_password
 PORT=8080
 ```
 
+### 3. Create Postgres SQL instance
+
+If you are planning to run this locally, you can install and execute a Postgres server at your machine by <a href="https://www.postgresqltutorial.com/install-postgresql/" target="_blank">following this tutorial</a>.
+
+If you're planning to run this in Google Cloud SQL for Postgres, you can deploy an instance of the service by following the <a href="https://cloud.google.com/sql/docs/postgres/quickstart" target="_blank">Google Cloud documentation</a>.
+
+Once you have your instance installed/deployed, you can go ahead and create a new database by running the command below.
+
+```sql
+create database vitedb;
+```
+
+Then, you can use the command below to create the table structure.
+
+```sql
+CREATE TABLE interviews (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    candidate_name VARCHAR(255) NOT NULL,
+    candidate_email VARCHAR(255) NOT NULL,
+    candidate_current_role VARCHAR(255),
+    applied_for_position VARCHAR(255) NOT NULL,
+    question_types JSONB,
+    interview_duration_minutes INTEGER,
+    transcript JSONB,
+    feedback TEXT
+);
+```
+
+
 ### 3. Run the Server
 
 Start the Express server with the following command:
