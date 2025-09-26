@@ -136,7 +136,7 @@ Deploy the container image to Cloud Run. This command will prompt you to select 
 
 ```
 gcloud run deploy [APP-NAME] \
-  --image=us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME] \
+  --image=us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME]:[TAG] \
   --platform=managed \
   --allow-unauthenticated
 ```
