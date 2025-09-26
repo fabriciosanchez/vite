@@ -1,6 +1,6 @@
 # Welcome to VITE - The Virtual Interviewer Environment
 
-![VITE Banner](/img/vite-banner-2.png)
+![VITE Banner](/img/vite-banner-3.png)
 
 VITE is a modern web application designed to help you ace your next interview. It provides a realistic, AI-powered virtual interviewer that you can practice with anytime, right from your browser. Get comfortable with answering questions and improve your interviewing skills in a stress-free environment.
 
