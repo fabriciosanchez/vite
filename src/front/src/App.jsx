@@ -221,6 +221,9 @@ export default function App() {
 // --- 1. Configuration Page Component ---
 function ConfigPage() {
   const { setPage, setInterviewConfig, setInterviewData } = useContext(AppContext);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [currentRole, setCurrentRole] = useState('');
   const [position, setPosition] = useState('');
   const [duration, setDuration] = useState(15);
   const [questionTypes, setQuestionTypes] = useState([]);
@@ -241,6 +244,18 @@ function ConfigPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!name.trim()) {
+      setError('Please enter your name.');
+      return;
+    }
+    if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (!currentRole.trim()) {
+      setError('Please enter your current role.');
+      return;
+    }
     if (!position.trim()) {
       setError('Please enter the position you are applying for.');
       return;
@@ -254,6 +269,9 @@ function ConfigPage() {
     // Reset interview data for new session
     setInterviewData({ chatHistory: [], feedback: "" }); 
     setInterviewConfig({
+      name,
+      email,
+      currentRole,
       position,
       duration,
       questionTypes
@@ -265,82 +283,139 @@ function ConfigPage() {
     <div className="flex items-center justify-center min-h-screen p-4 bg-white">
       <div className="w-full max-w-2xl p-8 space-y-8 bg-white rounded-2xl shadow-2xl border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-gray-900">
-          VITE Setup
+          Welcome to VITE
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Position Input */}
-          <div>
-            <label htmlFor="position" className="block text-sm font-medium text-gray-600">
-              Position You're Applying For
-            </label>
-            <input
-              type="text"
-              id="position"
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              placeholder="e.g., Senior Software Engineer"
-              className="w-full px-4 py-3 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Question Types Checkboxes */}
-          <div>
-            <label className="block text-sm font-medium text-gray-600">
-              What type of questions would you like to be asked?
-            </label>
-            <div className="grid grid-cols-2 gap-4 mt-2">
-              {allQuestionTypes.map(type => (
-                <label
-                  key={type}
-                  className={`flex items-center p-3 rounded-lg cursor-pointer transition-all ${
-                    questionTypes.includes(type) ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-                  }`}
-                >
+          {/* --- Personal Info Section --- */}
+          <div className="p-6 border border-gray-200 rounded-xl">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal Info</h3>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Name Input */}
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-600">
+                    Your Name
+                  </label>
                   <input
-                    type="checkbox"
-                    className="hidden"
-                    checked={questionTypes.includes(type)}
-                    onChange={() => handleTypeToggle(type)}
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g., Alex Doe"
+                    className="w-full px-4 py-3 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <span className="flex-grow">{type}</span>
-                  <div className={`w-5 h-5 flex-shrink-0 border-2 rounded ${
-                    questionTypes.includes(type) ? 'border-blue-300 bg-blue-600' : 'border-gray-400'
-                  }`}>
-                    {questionTypes.includes(type) && (
-                      <svg viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
-                      </svg>
-                    )}
-                  </div>
+                </div>
+                {/* Email Input */}
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+                    Personal Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="e.g., alex.doe@example.com"
+                    className="w-full px-4 py-3 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              {/* Current Role Input */}
+              <div>
+                <label htmlFor="currentRole" className="block text-sm font-medium text-gray-600">
+                  Your Current Role
                 </label>
-              ))}
+                <input
+                  type="text"
+                  id="currentRole"
+                  value={currentRole}
+                  onChange={(e) => setCurrentRole(e.target.value)}
+                  placeholder="e.g., Software Engineer"
+                  className="w-full px-4 py-3 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Duration Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-600">
-              Interview Duration
-            </label>
-            <div className="flex mt-2 space-x-4">
-              {durationOptions.map(opt => (
-                <label
-                  key={opt.value}
-                  className={`flex-1 p-3 text-center rounded-lg cursor-pointer transition-all ${
-                    duration === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="duration"
-                    value={opt.value}
-                    checked={duration === opt.value}
-                    onChange={() => setDuration(opt.value)}
-                    className="hidden"
-                  />
-                  {opt.label}
+          {/* --- Interview Profile Section --- */}
+          <div className="p-6 border border-gray-200 rounded-xl">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Dynamics of your interview</h3>
+            <div className="space-y-6">
+              {/* Position Input */}
+              <div>
+                <label htmlFor="position" className="block text-sm font-medium text-gray-600">
+                  Position You're Applying For
                 </label>
-              ))}
+                <input
+                  type="text"
+                  id="position"
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                  placeholder="e.g., Senior Software Engineer"
+                  className="w-full px-4 py-3 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Question Types Checkboxes */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600">
+                  What type of questions would you like to be asked?
+                </label>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  {allQuestionTypes.map(type => (
+                    <label
+                      key={type}
+                      className={`flex items-center p-3 rounded-lg cursor-pointer transition-all ${
+                        questionTypes.includes(type) ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="hidden"
+                        checked={questionTypes.includes(type)}
+                        onChange={() => handleTypeToggle(type)}
+                      />
+                      <span className="flex-grow">{type}</span>
+                      <div className={`w-5 h-5 flex-shrink-0 border-2 rounded ${
+                        questionTypes.includes(type) ? 'border-blue-300 bg-blue-600' : 'border-gray-400'
+                      }`}>
+                        {questionTypes.includes(type) && (
+                          <svg viewBox="0 0 16 16" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
+                          </svg>
+                        )}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Duration Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600">
+                  Interview Duration
+                </label>
+                <div className="flex mt-2 space-x-4">
+                  {durationOptions.map(opt => (
+                    <label
+                      key={opt.value}
+                      className={`flex-1 p-3 text-center rounded-lg cursor-pointer transition-all ${
+                        duration === opt.value ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="duration"
+                        value={opt.value}
+                        checked={duration === opt.value}
+                        onChange={() => setDuration(opt.value)}
+                        className="hidden"
+                      />
+                      {opt.label}
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -377,6 +452,13 @@ function InterviewPage() {
   const chatContainerRef = useRef(null);
   const audioContextRef = useRef(null);
   const initialPromptSentRef = useRef(false); // Ref to track if the first prompt has been sent
+  
+  // Use a ref to track the status for immediate access in async callbacks,
+  // preventing race conditions where the 'status' state might be stale.
+  const statusRef = useRef(status);
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY; // API key is handled by the environment
 
@@ -451,7 +533,7 @@ function InterviewPage() {
 
   // --- Audio Playback (TTS) ---
   const processAudioQueue = async () => {
-    if (isSpeakingRef.current || audioQueueRef.current.length === 0) {
+    if (isSpeakingRef.current || audioQueueRef.current.length === 0 || statusRef.current === 'finished') {
       return;
     }
 
@@ -483,7 +565,7 @@ function InterviewPage() {
           // Finished speaking. Only start listening if the interview has actually started
           // (i.e., the interviewer has said something).
           // Set status to 'ready' to allow the user to click the mic button.
-          if (status !== 'finished') {
+          if (statusRef.current !== 'finished') {
             setStatus('ready');
           }
         }
@@ -624,21 +706,28 @@ function InterviewPage() {
     stopListening(); // Stop listening
     setCurrentTranscript(''); // Clear interim
     addMessageToQueue(text, 'candidate');
-    
-    // Get AI's next question
-    getAINextQuestion(text);
+
+    // Check if there is enough time for another question.
+    // If less than or equal to 60 seconds, end the interview instead.
+    if (timeLeft <= 60) {
+      console.log("Time is low, ending interview instead of asking a new question.");
+      endInterview();
+    } else {
+      // Get AI's next question
+      getAINextQuestion(text);
+    }
   };
-  
+
   const getAINextQuestion = async (userAnswer = null, isRetry = false) => {
     setStatus('thinking');
     setError(''); // Clear previous errors on a new attempt
     
-    const { position, duration, questionTypes } = interviewConfig;
+    const { name, currentRole, position, duration, questionTypes } = interviewConfig;
     let systemPrompt;
 
     // Use a detailed prompt for the first turn, and a simpler one for follow-ups.
     if (chatHistory.length === 0) {
-      systemPrompt = `You are "Alex", a professional, friendly, and insightful virtual interviewer. You are conducting an interview for a ${position} position. The interview is ${duration} minutes long and must focus on ${questionTypes.join(', ')} questions.
+      systemPrompt = `You are "Alex", a professional, friendly, and insightful virtual interviewer. You are conducting an interview with ${name}, who is currently a ${currentRole}. The candidate is applying for a ${position} position. The interview is ${duration} minutes long and must focus on ${questionTypes.join(', ')} questions.
       
       Your primary role is to conduct the interview. Follow these rules:
       1.  Ask one question at a time.
@@ -672,7 +761,7 @@ function InterviewPage() {
     if (contents.length === 0) {
       contents.push({
         role: 'user',
-        parts: [{ text: `Hello, please begin the interview. Start with a brief welcome and your first question.` }]
+        parts: [{ text: `Hello Alex, please begin the interview. Greet me by my name, ${name}, and then ask your first question.` }]
       });
     }
     const payload = {
@@ -694,6 +783,9 @@ function InterviewPage() {
       const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
       if (responseText) {
         addMessageToQueue(responseText, 'interviewer');
+        // Critical Check: Do not proceed to generate/play audio if the interview has ended.
+        if (statusRef.current === 'finished') return;
+
         const audio = await getTTSAudio(responseText);
         if (audio) {
           audioQueueRef.current.push({
@@ -713,43 +805,95 @@ function InterviewPage() {
     }
   };
   
-  const endInterview = async () => {
+  const saveInterviewToDatabase = async (feedbackText) => {
+    // This is a placeholder for your actual backend API endpoint
+    const backendApiUrl = import.meta.env.VITE_BACKEND_API_URL; 
+
+    if (!backendApiUrl) {
+      console.warn("VITE_BACKEND_API_URL is not set. Skipping database save.");
+      return; // Don't block the user if the backend isn't configured
+    }
+
+    const payload = {
+      candidate_name: interviewConfig.name,
+      candidate_email: interviewConfig.email,
+      candidate_current_role: interviewConfig.currentRole,
+      applied_for_position: interviewConfig.position,
+      question_types: interviewConfig.questionTypes,
+      interview_duration_minutes: interviewConfig.duration,
+      transcript: chatHistory, // Send the full chat history
+      feedback: feedbackText,
+    };
+
+    try {
+      await fetch(backendApiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (error) {
+      console.error("Failed to save interview data to the database:", error);
+      // We don't show this error to the user to keep the flow smooth
+    }
+  };
+
+  const endInterview = () => {
+    // Prevent multiple executions if the button is clicked again or called from multiple places.
+    if (statusRef.current === 'finished') return;
+
     setStatus('finished'); // Immediately disable buttons and show feedback generation message
     stopListening();
+
+    // Interrupt any ongoing or queued speech from the interviewer.
     audioQueueRef.current = [];
     isSpeakingRef.current = false;
     if (audioContextRef.current) {
         audioContextRef.current.close();
     }
-    
+    document.querySelectorAll('audio').forEach(audio => audio.pause());
+
     const finalMessage = "That's all the time we have. Thank you for your time. I'm now compiling your feedback and will redirect you to the results page shortly.";
-    setChatHistory(prev => [...prev, {role: 'interviewer', text: finalMessage}]);
-    
-    const { position } = interviewConfig;
-    const systemPrompt = `You are "Alex", the virtual interviewer. The interview is now over. Your task is to provide comprehensive, constructive, and encouraging feedback to the candidate based on the entire transcript. The candidate was applying for a ${position} role. Format your feedback in Markdown: - **Overall Summary:** A brief paragraph on your overall impression. - **Strengths:** 2-3 bullet points on what the candidate did well. - **Areas for Improvement:** 2-3 bullet points on specific areas to work on with actionable advice. - **Concluding Encouragement:** End on a positive, encouraging note.`;
 
-    const model = "gemini-2.5-flash-preview-05-20";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    // Use the functional update form of setChatHistory. This gives us the most
+    // up-to-date 'currentHistory' and allows us to perform actions after the state is set.
+    setChatHistory(currentHistory => {
+      const finalChatHistory = [...currentHistory, { role: 'interviewer', text: finalMessage }];
 
-    const transcript = chatHistory.map(msg => `${msg.role === 'user' ? 'Candidate' : 'Interviewer'}: ${msg.text}`).join('\n\n');
-    const contents = [{ role: 'user', parts: [{ text: `Here is the full interview transcript:\n\n${transcript}\n\nPlease provide your feedback.` }] }];
+      // Perform the async operations *inside* the callback to ensure we use the final, correct state.
+      (async () => {
+        const { position } = interviewConfig;
+        const systemPrompt = `You are "Alex", the virtual interviewer. The interview is now over. Your task is to provide comprehensive, constructive, and encouraging feedback to the candidate based on the entire transcript. The candidate was applying for a ${position} role. Format your feedback in Markdown: - **Overall Summary:** A brief paragraph on your overall impression. - **Strengths:** 2-3 bullet points on what the candidate did well. - **Areas for Improvement:** 2-3 bullet points on specific areas to work on with actionable advice. - **Concluding Encouragement:** End on a positive, encouraging note.`;
 
-    const payload = { contents, systemInstruction: { role: "system", parts: [{ text: systemPrompt }] } };
+        const model = "gemini-2.5-flash-preview-05-20";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-    try {
-      const result = await fetchWithRetry(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      const feedbackText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (feedbackText) {
-        setInterviewData({ chatHistory, feedback: feedbackText });
-        setPage('results');
-      } else {
-        throw new Error("No feedback response from model.");
-      }
-    } catch (err) {
-      console.error("Feedback LLM Error:", err);
-      setInterviewData({ chatHistory, feedback: "Sorry, an error occurred while generating your feedback." });
-      setPage('results');
-    }
+        const transcript = finalChatHistory.map(msg => `${msg.role === 'user' ? 'Candidate' : 'Interviewer'}: ${msg.text}`).join('\n\n');
+        const contents = [{ role: 'user', parts: [{ text: `Here is the full interview transcript:\n\n${transcript}\n\nPlease provide your feedback.` }] }];
+
+        const payload = { contents, systemInstruction: { role: "system", parts: [{ text: systemPrompt }] } };
+
+        try {
+          const result = await fetchWithRetry(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          const feedbackText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+          if (feedbackText) {
+            // Pass the final history to the save function
+            saveInterviewToDatabase(feedbackText, finalChatHistory);
+            setInterviewData({ chatHistory: finalChatHistory, feedback: feedbackText });
+            setPage('results');
+          } else {
+            throw new Error("No feedback response from model.");
+          }
+        } catch (err) {
+          console.error("Feedback LLM Error:", err);
+          setInterviewData({ chatHistory: finalChatHistory, feedback: "Sorry, an error occurred while generating your feedback." });
+          setPage('results');
+        }
+      })();
+
+      // Return the new state for React to render
+      return finalChatHistory;
+    });
   };
 
   const formatTime = (seconds) => {

@@ -51,6 +51,7 @@ Now that you have your Gemini KEY and credentials properly configured, in the ro
 
 ```
 VITE_GEMINI_API_KEY={YOUR_GEMINI_API_KEY}
+VITE_BACKEND_API_URL={YOUR_VITE_API_URL}
 ```
 
 If you are just trying this application, you can go to <a href="https://aistudio.google.com/" target="_blank">https://aistudio.google.com/</a> and get one for free with limited usage.
