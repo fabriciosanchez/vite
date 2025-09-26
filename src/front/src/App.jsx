@@ -282,9 +282,11 @@ function ConfigPage() {
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-white">
       <div className="w-full max-w-2xl p-8 space-y-8 bg-white rounded-2xl shadow-2xl border border-gray-200">
-        <h2 className="text-3xl font-bold text-center text-gray-900">
-          Welcome to VITE
-        </h2>
+        <img src="../img/google-cloud.jpg" alt="Google Cloud" className="mx-auto my-2 h-12" />
+        <span className='text-lg font-semibold text-gray-800 mb-4'><center>Welcome to your Virtual Interview Assistant</center></span>
+        <span className="text-sm font-medium text-gray-600 italic">
+          <center>Powered by <a href='https://cloud.google.com' target='_blank'>Google Cloud</a> & <a href='https://www.gemini.com' target='_blank'>Gemini</a></center>
+        </span>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* --- Personal Info Section --- */}
           <div className="p-6 border border-gray-200 rounded-xl">
