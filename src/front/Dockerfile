@@ -16,6 +16,12 @@ RUN npm install
 # Copy the rest of the application source code into the container
 COPY . .
 
+# Defining env vars
+ARG VITE_BACKEND_API_URL
+ARG VITE_GEMINI_API_KEY
+ENV VITE_BACKEND_API_URL=$VITE_BACKEND_API_URL
+ENV VITE_GEMINI_API_KEY=$VITE_GEMINI_API_KEY
+
 # Run the build script defined in package.json
 RUN npm run build
 

@@ -80,7 +80,6 @@ CREATE TABLE interviews (
 );
 ```
 
-
 ### 3. Run the Server
 
 Start the Express server with the following command:
@@ -109,28 +108,13 @@ This service is designed to be deployed as a container on Google Cloud Run. The 
 - Secret Manager API enabled to store the database password securely.
 - A Google Cloud Artifact Registry with a repository named ```cloud-run-source-deploy``` created.
 
-### 1. Store the Database Password in Secret Manager
-
-For security, your database password should not be passed as a plain-text environment variable.
-
-```bash
-# Create the secret
-gcloud secrets create db-password --replication-policy="automatic"
-
-# Add the password as a secret version. The command will wait for your input.
-# Type your password, press Enter, and then press Ctrl+D (or Ctrl+Z on Windows) to finish.
-gcloud secrets versions add db-password --data-file=-
-```
-
 ### 2. Generate image and deploy to Cloud Run
 
 In your terminal, from the project root, build the image. Replace ```[PROJECT-ID]``` with your Google Cloud Project ID and ```[APP-NAME]``` with your desired app name (e.g., virtual-interviewer).
 
 ```
-docker build -t us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME] .
+docker build --build-arg DB_USER={your-db-user} --build-arg DB_HOST={your-db-host} --build-arg DB_NAME={your-db-name} --build-arg DB_PASSWORD={your-db-password} -t us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME] .
 ```
-
-(Example: docker build -t us-central1-docker.pkg.dev/my-gcp-project/cloud-run-source-deploy/vite-api .)
 
 **Configure Docker Authentication:**
 
@@ -150,33 +134,10 @@ docker push us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP
 
 **Deploy the container image to Cloud Run, securely injecting the database credentials**
 
-- The `--set-env-vars` flag sets non-sensitive information.
-- The `--set-secrets` flag maps the Secret Manager secret to an environment variable (`DB_PASSWORD`).
-
-Replace `[PROJECT-ID]`, `[DB_USER]`, `[DB_HOST]`, and `[DB_NAME]` with your specific values.
-
 ```bash
 gcloud run deploy vite-api \
-  --image us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/vite-api:tag \
+  --image us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/vite-api:latest \
   --platform managed \
   --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars="DB_USER=[DB_USER],DB_HOST=[DB_HOST],DB_NAME=[DB_NAME]" \
-  --set-secrets="DB_PASSWORD=db-password:latest"
+  --allow-unauthenticated
 ```
-
-***Permission denied error***
-
-If you see an error related to permission denied on the secret, it means that the service account running your Cloud Run revision doesn't have permission to access the secret you assigned to it.
-
-Cloud Run uses a specific service account (in this case, the Compute Engine default service account) to execute your code. You need to explicitly grant that account the "Secret Manager Secret Accessor" role so it can read the value of your ```db-password``` secret.
-
-To solve it, run the following gcloud command:
-
-```
-gcloud secrets add-iam-policy-binding db-password \
-  --member="serviceAccount:{your-compute-service-account}@developer.gserviceaccount.com" \
-  --role="roles/secretmanager.secretAccessor"
-```
-
-After deployment, Cloud Run will provide a public URL where your service is accessible.

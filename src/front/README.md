@@ -109,10 +109,11 @@ To avoid 403 (Forbidden) errors when running the application from Cloud Run, you
 In your terminal, from the project root, build the image. Replace ```[PROJECT-ID]``` with your Google Cloud Project ID and ```[APP-NAME]``` with your desired app name (e.g., vite-app).
 
 ```
-docker build -t us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME] .
-```
 
-(Example: docker build -t us-central1-docker.pkg.dev/my-gcp-project/cloud-run-source-deploy/vite-app .)
+VITE_BACKEND_API_URL=http://localhost:8080/save-interview
+
+docker build --build-arg VITE_GEMINI_API_KEY={your-gemini-api-key} --build-arg VITE_BACKEND_API_URL={your-backend-api-url} -t us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME] .
+```
 
 **Configure Docker Authentication:**
 
@@ -136,7 +137,7 @@ Deploy the container image to Cloud Run. This command will prompt you to select 
 
 ```
 gcloud run deploy [APP-NAME] \
-  --image=us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME]:[TAG] \
+  --image=us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME]:latest \
   --platform=managed \
   --allow-unauthenticated
 ```

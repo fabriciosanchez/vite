@@ -14,6 +14,17 @@ RUN npm ci
 # Copy the rest of the application's source code.
 COPY . .
 
+# DB env
+ARG DB_USER
+ARG DB_HOST
+ARG DB_NAME
+ARG DB_PASSWORD
+
+ENV DB_USER=$DB_USER
+ENV DB_HOST=$DB_HOST
+ENV DB_NAME=$DB_NAME
+ENV DB_PASSWORD=$DB_PASSWORD
+
 # --- Production Stage ---
 # Use a slim Node.js image for the final production image.
 FROM node:20-slim AS production
