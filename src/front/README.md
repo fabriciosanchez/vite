@@ -99,20 +99,20 @@ To avoid 403 (Forbidden) errors when running the application from Cloud Run, you
 
 ```
   http://localhost:5173 (for local)
-  https://{your-domain/fqdn}/ (for deployed in the cloud) 
+  https://{your-domain-or-fqdn}/ (for deployed in the cloud) 
   ```
 
 ### Deployment Steps
 
 **Build the Docker Image:**
 
-In your terminal, from the project root, build the image. Replace ```[PROJECT-ID]``` with your Google Cloud Project ID and ```[APP-NAME]``` with your desired app name (e.g., virtual-interviewer).
+In your terminal, from the project root, build the image. Replace ```[PROJECT-ID]``` with your Google Cloud Project ID and ```[APP-NAME]``` with your desired app name (e.g., vite-app).
 
 ```
 docker build -t us-central1-docker.pkg.dev/[PROJECT-ID]/cloud-run-source-deploy/[APP-NAME] .
 ```
 
-(Example: docker build -t us-central1-docker.pkg.dev/my-gcp-project/cloud-run-source-deploy/interview-app .)
+(Example: docker build -t us-central1-docker.pkg.dev/my-gcp-project/cloud-run-source-deploy/vite-app .)
 
 **Configure Docker Authentication:**
 
